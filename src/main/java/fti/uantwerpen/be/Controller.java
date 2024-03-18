@@ -1,7 +1,6 @@
 package fti.uantwerpen.be;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -17,7 +16,7 @@ public class Controller {
         users.put(userid, new User(userid));
         return "User with id = " + userid + " has been registered.";
     }
-    @PostMapping("/bankaccount/{userid}/")
+    @PostMapping("/bankaccount/{userid}")
     public String createBankAccount(@PathVariable int userid) {
         if (!users.containsKey(userid)) {
             return "This user has not yet registered.";
@@ -25,6 +24,9 @@ public class Controller {
         // Create unique bankaccount number
         Random random = new Random(userid);
         String bankAccountNumber = "BE" + random.nextInt();
+        if (bankAccounts.containsKey(bankAccountNumber)) {
+            return "This user already has a personal bankaccount.";
+        }
         BankAccount bankAccount = new BankAccount(bankAccountNumber, new User(userid));
         bankAccounts.put(bankAccountNumber, bankAccount);
         users.put(userid, new User(userid));
